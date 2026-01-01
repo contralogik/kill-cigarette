@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kill Cigarette</title>
+  <style>
+    :root{
+      --bg1:#071022;
+      --bg2:#041d1a;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --muted2: rgba(255,255,255,.5);
+      --accent:#2aa7ff;
+      --good:#2fe18a;
+      --bad:#ff4d4d;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius2: 24px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC","Hiragino Sans GB","Microsoft YaHei", Arial, "Noto Sans CJK SC", sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: var(--sans);
+      background: radial-gradient(1000px 600px at 20% 10%, rgba(42,167,255,.18), transparent 55%),
+                  radial-gradient(900px 600px at 80% 30%, rgba(47,225,138,.14), transparent 55%),
+                  linear-gradient(120deg, var(--bg1), var(--bg2));
+    }
+    .wrap{
+      max-width: 980px;
+      margin: 24px auto 40px;
+      padding: 0 18px;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 16px;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.22);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      min-width: 220px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(42,167,255,.18);
+    }
+    .brand h1{
+      font-size: 16px;
+      margin:0;
+      letter-spacing:.3px;
+      font-weight: 650;
+    }
+    .actions{
+      display:flex;align-items:center;gap:10px;
+    }
+    .iconbtn{
+      width:42px;height:42px;border-radius:14px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      display:grid;place-items:center;
+      cursor:pointer;
+      transition:.15s ease;
+      user-select:none;
+    }
+    .iconbtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.09)}
+    .iconbtn:active{transform: translateY(0px); background: rgba(255,255,255,.07)}
+    .grid{
+      display:grid;
+      gap:14px;
+      margin-top: 16px;
+    }
+    .hero{
+      border-radius: var(--radius2);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      box-shadow: var(--shadow);
+      padding: 18px;
+      overflow:hidden;
+    }
+    .cta{
+      width:100%;
+      border: 0;
+      border-radius: 18px;
+      padding: 18px 16px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor:pointer;
+      color:#001423;
+      background: linear-gradient(90deg, rgba(42,167,255,1), rgba(42,167,255,.75));
+      box-shadow: 0 14px 40px rgba(42,167,255,.22);
+      transition: .15s ease;
+    }
+    .cta:hover{transform: translateY(-1px)}
+    .cta:active{transform: translateY(0px)}
+    .heroRow{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      margin-top: 10px;
+    }
+    .heroHint{
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:baseline;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.18);
+      border-radius: 999px;
+      padding: 10px 12px;
+      min-width: 120px;
+      justify-content:center;
+    }
+    .pill .label{color:var(--muted2); font-size: 12px}
+    .pill .value{font-size: 20px; font-weight:800}
+    .cards{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+    }
+    @media (max-width: 860px){
+      .cards{grid-template-columns: 1fr}
+      .brand{min-width:auto}
+    }
+    .card{
+      border-radius: var(--radius2);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .card h2{
+      margin:0 0 12px 0;
+      font-size: 14px;
+      color: rgba(255,255,255,.82);
+      letter-spacing: .2px;
+    }
+    .kpiRow{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .kpi{
+      border-radius: 16px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      padding: 12px 12px;
+      min-height: 70px;
+    }
+    .kpi .k{font-size:12px;color:var(--muted2);margin-bottom:6px}
+    .kpi .v{font-size:22px;font-weight:850;letter-spacing:.3px}
+    .big{
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: .6px;
+    }
+    .muted{color:var(--muted); font-size: 13px; line-height:1.55}
+    .muted small{color:var(--muted2)}
+    .section{
+      margin-top: 14px;
+    }
+    .rule{
+      margin-top: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 12px;
+    }
+    .rule .rtext{color:var(--muted2);font-size:12px}
+    .list{
+      margin-top: 10px;
+      border-radius: 16px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      overflow:hidden;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding: 12px 12px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      gap: 10px;
+    }
+    .row:first-child{border-top:0}
+    .tag{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.8);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      white-space: nowrap;
+    }
+    .ok{color: var(--good)}
+    .no{color: var(--bad)}
+    /* overlay pages */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+    }
+    .overlay.show{display:flex}
+    .sheet{
+      width: min(980px, 100%);
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(20,28,42,.94), rgba(11,18,30,.92));
+      box-shadow: 0 28px 90px rgba(0,0,0,.65);
+      overflow:hidden;
+    }
+    .sheetHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 12px;
+      padding: 14px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .sheetHead .title{
+      font-weight: 800;
+      letter-spacing:.2px;
+    }
+    .sheetBody{
+      padding: 16px;
+    }
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+    }
+    @media (max-width: 860px){
+      .twoCol{grid-template-columns: 1fr}
+    }
+    .imgBox{
+      border-radius: 20px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      min-height: 260px;
+      display:grid;
+      place-items:center;
+      position:relative;
+    }
+    .imgBox img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      filter: contrast(1.05) saturate(1.05);
+    }
+    .imgPlaceholder{
+      padding: 18px;
+      text-align:center;
+      color: var(--muted);
+      line-height:1.6;
+      max-width: 520px;
+    }
+    .timer{
+      font-family: var(--mono);
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    .quote{
+      margin-top: 10px;
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(255,255,255,.88);
+    }
+    .subquote{
+      margin-top: 6px;
+      font-size: 12px;
+      color: rgba(255,255,255,.52);
+    }
+    .btnRow{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 12px 14px;
+      cursor:pointer;
+      transition:.15s ease;
+      user-select:none;
+      font-weight:700;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+    .btn:active{transform: translateY(0px)}
+    .btnGood{
+      background: rgba(47,225,138,.16);
+      border-color: rgba(47,225,138,.28);
+    }
+    .btnBad{
+      background: rgba(255,77,77,.14);
+      border-color: rgba(255,77,77,.30);
+    }
+    .btnPrimary{
+      background: rgba(42,167,255,.18);
+      border-color: rgba(42,167,255,.32);
+    }
+    .hintBox{
+      margin-top: 12px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      padding: 12px 12px;
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .field{
+      display:grid;
+      gap: 8px;
+      margin: 10px 0 14px;
+    }
+    label{
+      font-size: 12px;
+      color: rgba(255,255,255,.70);
+    }
+    input[type="number"], input[type="text"]{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      outline: none;
+    }
+    input[type="file"]{
+      width: 100%;
+      padding: 10px 10px;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,.22);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.70);
+      outline: none;
+      cursor:pointer;
+    }
+    .smallRow{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content: space-between;
+    }
+    .countChip{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      border-radius: 999px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: rgba(255,255,255,.8);
+      font-family: var(--mono);
+      white-space:nowrap;
+    }
+    .danger{
+      color: rgba(255,255,255,.85);
+      background: rgba(255,77,77,.12);
+      border:1px solid rgba(255,77,77,.25);
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    a{color: rgba(42,167,255,.95)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="dot"></div>
+        <h1>Kill Cigarette</h1>
+      </div>
+      <div class="actions">
+        <button class="iconbtn" id="btnOpenSettings" title="设置">
+          ⚙️
+        </button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="hero">
+        <button class="cta" id="btnCrave">我现在想吸烟</button>
+        <div class="heroRow">
+          <div class="heroHint" id="statusLine">今天，先把下一次冲动顶过去。</div>
+          <div class="pill">
+            <div class="label">今日节省</div>
+            <div class="value" id="todaySave">¥0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h2>今日概览</h2>
+          <div class="kpiRow">
+            <div class="kpi">
+              <div class="k">冲动次数</div>
+              <div class="v" id="kpiCrave">0</div>
+            </div>
+            <div class="kpi">
+              <div class="k">忍住次数</div>
+              <div class="v" id="kpiResist">0</div>
+            </div>
+            <div class="kpi">
+              <div class="k">抽烟次数</div>
+              <div class="v" id="kpiSmoke">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>连续抗住</h2>
+          <div class="big" id="streakDays">0</div>
+          <div class="muted">天（连续无烟）<br><small>从上一次“抽了”之后开始计算</small></div>
+        </div>
+
+        <div class="card" style="grid-column: 1 / -1;">
+          <h2>本周节省</h2>
+          <div class="big" id="weekSave">¥0</div>
+          <div class="rule">
+            <div class="rtext" id="ruleText">规则：当天抽烟次数为 0，则记为节省 ¥25</div>
+            <div class="rtext" id="weekRangeText"></div>
+          </div>
+
+          <div class="section">
+            <h2 style="margin-top:10px;">最近记录</h2>
+            <div class="list" id="logList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 冲动页 -->
+  <div class="overlay" id="overlayCrave" aria-hidden="true">
+    <div class="sheet">
+      <div class="sheetHead">
+        <div class="title">冲动处理</div>
+        <button class="iconbtn" id="btnCloseCrave" title="关闭">✕</button>
+      </div>
+      <div class="sheetBody">
+        <div class="twoCol">
+          <div class="imgBox" id="imgBox">
+            <div class="imgPlaceholder" id="imgPlaceholder">
+              <b>还没有导入人物图片。</b><br>
+              去“设置”里导入科比/梅西/刘翔/Pavel 等图片。<br>
+              <span style="color:rgba(255,255,255,.55)">提示：图片只存本机，本工具不联网。</span>
+            </div>
+            <img id="motivationImg" alt="激励图片" style="display:none;" />
+          </div>
+
+          <div>
+            <div class="smallRow">
+              <div class="countChip">本次挑战：<b id="challengeMin">7</b> 分钟</div>
+              <div class="countChip">当前时间：<b id="nowTime">--:--</b></div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <div class="timer" id="timer">07:00</div>
+              <div class="quote" id="quote">你不需要赢一辈子，只需要赢下这 7 分钟。</div>
+              <div class="subquote" id="quoteMeta">— 每 30 秒换一句</div>
+
+              <div class="hintBox">
+                把注意力交给当下的 10 秒：<b>吸气 4 秒 → 屏住 2 秒 → 呼气 6 秒</b>。<br>
+                冲动不是命令，只是一阵波。你要做的是：<b>让它过去</b>。
+              </div>
+
+              <div class="btnRow">
+                <button class="btn btnPrimary" id="btnSkip">跳过（已顶过去）</button>
+                <button class="btn btnGood" id="btnResist">忍住了 ✅</button>
+                <button class="btn btnBad" id="btnSmoke">抽了 ❌</button>
+              </div>
+
+              <div class="muted" style="margin-top:10px;">
+                小技巧：如果你真的很难受，先把“抽了”点了也没关系——记录真实数据，才有改进空间。
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置页 -->
+  <div class="overlay" id="overlaySettings" aria-hidden="true">
+    <div class="sheet">
+      <div class="sheetHead">
+        <div class="title">设置</div>
+        <button class="iconbtn" id="btnCloseSettings" title="关闭">✕</button>
+      </div>
+      <div class="sheetBody">
+        <div class="twoCol">
+          <div class="card" style="box-shadow:none; margin:0;">
+            <h2>节省规则</h2>
+            <div class="field">
+              <label for="savePerDay">当天无烟节省（元）</label>
+              <input id="savePerDay" type="number" min="0" step="1" value="25" />
+              <div class="muted">规则：当天“抽烟次数=0”时计入节省；否则当天节省为 0。</div>
+            </div>
+
+            <h2>冲动时长</h2>
+            <div class="field">
+              <label for="challengeMinutes">每次冲动倒计时（分钟）</label>
+              <input id="challengeMinutes" type="number" min="1" step="1" value="7" />
+            </div>
+
+            <h2>状态反馈（可自定义）</h2>
+            <div class="field">
+              <label for="statusTemplate">一句话状态模板（支持 {crave} {resist} {smoke} {streak}）</label>
+              <input id="statusTemplate" type="text" value="今天先顶过去：冲动{crave}次，忍住{resist}次，抽烟{smoke}次。连续无烟{streak}天。" />
+            </div>
+
+            <div class="btnRow">
+              <button class="btn btnPrimary" id="btnSaveSettings">保存设置</button>
+              <button class="btn" id="btnExport">导出数据</button>
+              <button class="btn" id="btnImport">导入数据</button>
+            </div>
+
+            <div class="danger" style="margin-top:12px;">
+              <b>清空数据（谨慎）</b><br>
+              这会清除所有统计、记录、导入的图片（仅本机）。<br>
+              <div class="btnRow" style="margin-top:10px;">
+                <button class="btn btnBad" id="btnReset">我确认清空</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="box-shadow:none; margin:0;">
+            <h2>导入你喜欢的人物图片</h2>
+            <div class="field">
+              <label for="imgInput">选择图片（可多张）</label>
+              <input id="imgInput" type="file" accept="image/*" multiple />
+              <div class="muted">图片会转成“本地数据”保存到浏览器里，不会上传到任何地方。</div>
+            </div>
+
+            <div class="smallRow">
+              <div class="countChip">已保存图片：<b id="imgCount">0</b> 张</div>
+              <button class="btn" id="btnClearImgs">清空图片</button>
+            </div>
+
+            <div class="field" style="margin-top:14px;">
+              <label>哲理激励语（内置可用，也可后续扩充）</label>
+              <div class="muted">
+                你可以把自己的“哲理句/格言”贴给我，我帮你按风格批量写一组（偏科比/梅西训练哲学那种）。
+              </div>
+            </div>
+
+            <div class="field">
+              <label>手机使用建议</label>
+              <div class="muted">
+                单文件也能用，但若你想“添加到主屏幕”，通常需要放到一个网址上（比如 GitHub Pages/Netlify）。
+                你如果要，我给你一键教程。
+              </div>
+            </div>
+
+            <input id="fileImport" type="file" accept="application/json" style="display:none;" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // ---------- Storage Keys ----------
+  const KEY = "kc_singlefile_v1";
+
+  // ---------- Helpers ----------
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const now = () => new Date();
+  const dateKey = (d = now()) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  const timeStr = (d = now()) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+  const iso = (d = now()) => d.toISOString();
+
+  function startOfWeek(d = now()) {
+    // Monday start
+    const x = new Date(d);
+    const day = (x.getDay() + 6) % 7; // 0=Mon..6=Sun
+    x.setHours(0,0,0,0);
+    x.setDate(x.getDate() - day);
+    return x;
+  }
+  function endOfWeek(d = now()) {
+    const s = startOfWeek(d);
+    const e = new Date(s);
+    e.setDate(e.getDate()+6);
+    return e;
+  }
+  function inRangeDay(key, start, end){
+    return key >= start && key <= end;
+  }
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+  // ---------- Default Quotes (哲理一点，不鸡汤) ----------
+  const DEFAULT_QUOTES = [
+    "冲动是浪，不是命令。你不需要消灭浪，只需要站稳。",
+    "你现在想要的那口，只是把痛苦延后；你现在拒绝的那口，是把自由提前。",
+    "一根烟解决不了任何问题，但会把你解决问题的能力打折。",
+    "自律不是压抑，而是给未来的自己投票。",
+    "欲望的强度会撒谎；只要你等一会儿，它就会自己变弱。",
+    "你以为你在戒烟，其实你在训练：遇到不适也能不崩。",
+    "真正的强，不是没有冲动，而是冲动来时仍能选择。",
+    "把今天切成更小的块：先赢 10 秒，再赢 1 分钟，再赢 7 分钟。",
+    "你不需要证明什么给别人看，你只需要对得起那个想变好的自己。",
+    "习惯从来不是靠意志力维持，而是靠环境和记录塑形。",
+    "复吸不是失败，是数据：哪里最容易破功，就去加固哪里。",
+    "短期快感像借高利贷；你现在付一点点不舒服，换未来的大把轻松。",
+    "决定你是谁的，不是誓言，而是你在最想放弃时做的那个小动作。",
+    "如果你能把冲动按住 7 分钟，你就能把人生的很多事按住。",
+    "你不是在和烟对抗，你是在和“自动驾驶的自己”对抗。",
+    "把欲望当作来访者：请进来坐一会儿，然后送走。",
+    "当你说‘就这一根’时，真正说话的是旧习惯，不是你。",
+    "任何改变都先发生在‘停一下’这一瞬间。",
+    "今天的你不是来讨好感觉的，你是来训练选择的。",
+    "自由并不舒服，自由需要练。"
+  ];
+
+  // ---------- State Model ----------
+  const defaultState = () => ({
+    settings: {
+      savePerDay: 25,
+      challengeMinutes: 7,
+      statusTemplate: "今天先顶过去：冲动{crave}次，忍住{resist}次，抽烟{smoke}次。连续无烟{streak}天。"
+    },
+    // per day: {crave, resist, smoke}
+    days: {},
+    // logs: [{ts, type}] type: crave|resist|smoke|skip
+    logs: [],
+    // images: [dataURL,...]
+    images: [],
+    // last smoke timestamp for streak calculation
+    lastSmokeTs: null,
+    // quotes: (optional) could allow user custom later
+    quotes: DEFAULT_QUOTES
+  });
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return defaultState();
+      const s = JSON.parse(raw);
+      // merge with defaults
+      const d = defaultState();
+      return {
+        ...d,
+        ...s,
+        settings: {...d.settings, ...(s.settings||{})},
+        days: s.days || {},
+        logs: Array.isArray(s.logs) ? s.logs : [],
+        images: Array.isArray(s.images) ? s.images : [],
+        quotes: Array.isArray(s.quotes) && s.quotes.length ? s.quotes : DEFAULT_QUOTES,
+        lastSmokeTs: s.lastSmokeTs || null
+      };
+    }catch(e){
+      console.warn("loadState failed", e);
+      return defaultState();
+    }
+  }
+  function saveState(){
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+
+  function ensureDay(k = dateKey()){
+    if(!state.days[k]){
+      state.days[k] = { crave:0, resist:0, smoke:0 };
+    }
+    return state.days[k];
+  }
+
+  // ---------- Stats ----------
+  function calcToday(){
+    const k = dateKey();
+    const d = ensureDay(k);
+    const save = (d.smoke === 0) ? Number(state.settings.savePerDay||0) : 0;
+    return { key:k, ...d, save };
+  }
+  function calcWeek(){
+    const s = startOfWeek();
+    const e = endOfWeek();
+    const sk = dateKey(s);
+    const ek = dateKey(e);
+    let sum = 0;
+    for(const k of Object.keys(state.days)){
+      if(inRangeDay(k, sk, ek)){
+        const d = state.days[k];
+        if(d && d.smoke === 0){
+          sum += Number(state.settings.savePerDay||0);
+        }
+      }
+    }
+    return { sum, sk, ek };
+  }
+
+  function calcStreakDays(){
+    // streak = full days since last smoke (or 0 if smoked today)
+    const todayK = dateKey();
+    const today = ensureDay(todayK);
+    if(today.smoke > 0) return 0;
+    // if never smoked logged, streak is count of consecutive smoke-free days backwards from today until a day with smoke>0
+    // but user wants "从上一次‘抽了’之后开始计算"
+    // We compute consecutive days from today backwards until encounter smoke > 0
+    let streak = 0;
+    for(let i=0; i<3650; i++){
+      const d = new Date();
+      d.setDate(d.getDate()-i);
+      const k = dateKey(d);
+      const rec = state.days[k];
+      const smoked = rec ? rec.smoke > 0 : false;
+      if(smoked){
+        break;
+      }else{
+        streak++;
+      }
+    }
+    // streak counts today as 1 day smoke-free; but UI earlier showed 0 if never smoked yet
+    // user expectation? Most quit apps count today as 1; but your earlier text "从上一次冲动开始算" -> you wanted 0 when just started.
+    // We'll show: if no smoke ever and no resist/crave yet, streak=0; else show streak.
+    const hasAny = Object.values(state.days).some(x => (x.crave||0)+(x.resist||0)+(x.smoke||0) > 0);
+    if(!hasAny) return 0;
+    return Math.max(0, streak);
+  }
+
+  // ---------- Logs ----------
+  function addLog(type){
+    state.logs.unshift({ ts: iso(), type });
+    // keep last 60
+    if(state.logs.length > 60) state.logs.length = 60;
+  }
+
+  // ---------- UI Elements ----------
+  const $ = (id) => document.getElementById(id);
+
+  const el = {
+    statusLine: $("statusLine"),
+    todaySave: $("todaySave"),
+    weekSave: $("weekSave"),
+    ruleText: $("ruleText"),
+    weekRangeText: $("weekRangeText"),
+    kpiCrave: $("kpiCrave"),
+    kpiResist: $("kpiResist"),
+    kpiSmoke: $("kpiSmoke"),
+    streakDays: $("streakDays"),
+    logList: $("logList"),
+
+    overlayCrave: $("overlayCrave"),
+    overlaySettings: $("overlaySettings"),
+
+    btnCrave: $("btnCrave"),
+    btnOpenSettings: $("btnOpenSettings"),
+    btnCloseCrave: $("btnCloseCrave"),
+    btnCloseSettings: $("btnCloseSettings"),
+
+    timer: $("timer"),
+    quote: $("quote"),
+    quoteMeta: $("quoteMeta"),
+    nowTime: $("nowTime"),
+    challengeMin: $("challengeMin"),
+
+    btnSkip: $("btnSkip"),
+    btnResist: $("btnResist"),
+    btnSmoke: $("btnSmoke"),
+
+    // settings
+    savePerDay: $("savePerDay"),
+    challengeMinutes: $("challengeMinutes"),
+    statusTemplate: $("statusTemplate"),
+    btnSaveSettings: $("btnSaveSettings"),
+    btnReset: $("btnReset"),
+    btnExport: $("btnExport"),
+    btnImport: $("btnImport"),
+    fileImport: $("fileImport"),
+
+    // images
+    imgInput: $("imgInput"),
+    imgCount: $("imgCount"),
+    btnClearImgs: $("btnClearImgs"),
+
+    imgBox: $("imgBox"),
+    motivationImg: $("motivationImg"),
+    imgPlaceholder: $("imgPlaceholder")
+  };
+
+  // ---------- Render ----------
+  function formatStatusLine(){
+    const t = calcToday();
+    const streak = calcStreakDays();
+    const tpl = String(state.settings.statusTemplate || "");
+    return tpl
+      .replaceAll("{crave}", String(t.crave))
+      .replaceAll("{resist}", String(t.resist))
+      .replaceAll("{smoke}", String(t.smoke))
+      .replaceAll("{streak}", String(streak));
+  }
+
+  function render(){
+    const t = calcToday();
+    const w = calcWeek();
+    const streak = calcStreakDays();
+
+    el.todaySave.textContent = `¥${t.save}`;
+    el.weekSave.textContent = `¥${w.sum}`;
+    el.kpiCrave.textContent = t.crave;
+    el.kpiResist.textContent = t.resist;
+    el.kpiSmoke.textContent = t.smoke;
+    el.streakDays.textContent = streak;
+
+    el.ruleText.textContent = `规则：当天抽烟次数为 0，则记为节省 ¥${Number(state.settings.savePerDay||0)}`;
+    el.weekRangeText.textContent = `本周：${w.sk} ~ ${w.ek}`;
+
+    el.statusLine.textContent = formatStatusLine();
+
+    renderLogs();
+    renderSettingsFields();
+    renderImageCount();
+  }
+
+  function renderLogs(){
+    const logs = state.logs.slice(0, 10);
+    if(logs.length === 0){
+      el.logList.innerHTML = `<div class="row"><span class="muted">暂无记录。下一次冲动来时，点“我现在想吸烟”。</span><span class="tag">empty</span></div>`;
+      return;
+    }
+    const map = {
+      crave: {text:"冲动", cls:"", tag:"crave"},
+      resist:{text:"忍住", cls:"ok", tag:"resist"},
+      smoke: {text:"抽了", cls:"no", tag:"smoke"},
+      skip:  {text:"跳过/顶过去", cls:"ok", tag:"skip"}
+    };
+    el.logList.innerHTML = logs.map(item => {
+      const d = new Date(item.ts);
+      const t = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+      const k = map[item.type] || {text:item.type, cls:"", tag:item.type};
+      return `
+        <div class="row">
+          <div>
+            <div style="font-weight:800" class="${k.cls}">${k.text}</div>
+            <div class="muted" style="font-size:12px">${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${t}</div>
+          </div>
+          <span class="tag">${k.tag}</span>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderSettingsFields(){
+    el.savePerDay.value = Number(state.settings.savePerDay || 25);
+    el.challengeMinutes.value = Number(state.settings.challengeMinutes || 7);
+    el.statusTemplate.value = String(state.settings.statusTemplate || "");
+    el.challengeMin.textContent = Number(state.settings.challengeMinutes || 7);
+  }
+
+  function renderImageCount(){
+    el.imgCount.textContent = String((state.images||[]).length);
+  }
+
+  // ---------- Overlays ----------
+  function openOverlay(which){
+    if(which === "crave"){
+      el.overlayCrave.classList.add("show");
+      el.overlayCrave.setAttribute("aria-hidden","false");
+    }else{
+      el.overlaySettings.classList.add("show");
+      el.overlaySettings.setAttribute("aria-hidden","false");
+    }
+  }
+  function closeOverlay(which){
+    if(which === "crave"){
+      el.overlayCrave.classList.remove("show");
+      el.overlayCrave.setAttribute("aria-hidden","true");
+    }else{
+      el.overlaySettings.classList.remove("show");
+      el.overlaySettings.setAttribute("aria-hidden","true");
+    }
+  }
+
+  // ---------- Crave Session ----------
+  let timerHandle = null;
+  let quoteHandle = null;
+  let remainingSec = 0;
+
+  function pickRandom(arr){
+    if(!arr || !arr.length) return null;
+    return arr[Math.floor(Math.random()*arr.length)];
+  }
+  function showRandomImage(){
+    const imgs = state.images || [];
+    if(imgs.length === 0){
+      el.motivationImg.style.display = "none";
+      el.imgPlaceholder.style.display = "block";
+      return;
+    }
+    const src = pickRandom(imgs);
+    el.motivationImg.src = src;
+    el.motivationImg.style.display = "block";
+    el.imgPlaceholder.style.display = "none";
+  }
+  function showRandomQuote(){
+    const q = pickRandom(state.quotes || DEFAULT_QUOTES) || "你不需要赢一辈子，只需要赢下这一刻。";
+    el.quote.textContent = q;
+  }
+  function renderTimer(){
+    const m = Math.floor(remainingSec/60);
+    const s = remainingSec%60;
+    el.timer.textContent = `${pad2(m)}:${pad2(s)}`;
+  }
+
+  function startCraveSession(){
+    // record crave
+    const today = ensureDay(dateKey());
+    today.crave += 1;
+    addLog("crave");
+    saveState();
+
+    // open overlay
+    openOverlay("crave");
+
+    // init
+    el.nowTime.textContent = timeStr();
+    const minutes = clamp(Number(state.settings.challengeMinutes||7), 1, 120);
+    el.challengeMin.textContent = String(minutes);
+    remainingSec = minutes * 60;
+    renderTimer();
+    showRandomImage();
+    showRandomQuote();
+
+    // tick
+    if(timerHandle) clearInterval(timerHandle);
+    timerHandle = setInterval(() => {
+      remainingSec = Math.max(0, remainingSec - 1);
+      renderTimer();
+      if(remainingSec === 0){
+        // auto "skip success"
+        clearInterval(timerHandle);
+        timerHandle = null;
+        // allow user to choose but we can nudge
+        el.quote.textContent = "时间到了。冲动已过峰值——现在把它放走。";
+        el.quoteMeta.textContent = "— 你已经赢下了这一段";
+      }
+    }, 1000);
+
+    // quote rotation every 30s
+    if(quoteHandle) clearInterval(quoteHandle);
+    quoteHandle = setInterval(() => {
+      showRandomQuote();
+      showRandomImage();
+      el.quoteMeta.textContent = "— 每 30 秒换一句";
+    }, 30000);
+
+    render();
+  }
+
+  function endCraveSession(action){
+    // action: resist | smoke | skip
+    const today = ensureDay(dateKey());
+    if(action === "resist"){
+      today.resist += 1;
+      addLog("resist");
+    }else if(action === "smoke"){
+      today.smoke += 1;
+      state.lastSmokeTs = iso();
+      addLog("smoke");
+    }else{
+      // skip means "顶过去"
+      today.resist += 1; // treat as resist
+      addLog("skip");
+    }
+
+    saveState();
+    render();
+
+    if(timerHandle){ clearInterval(timerHandle); timerHandle = null; }
+    if(quoteHandle){ clearInterval(quoteHandle); quoteHandle = null; }
+
+    closeOverlay("crave");
+  }
+
+  // ---------- Settings: Images Import ----------
+  async function filesToDataURLs(files){
+    const maxFiles = 24; // keep reasonable
+    const maxSizeMB = 2.5;
+    const selected = Array.from(files || []).slice(0, maxFiles);
+
+    const dataURLs = [];
+    for(const f of selected){
+      if(!f.type.startsWith("image/")) continue;
+      // basic size limit
+      if(f.size > maxSizeMB * 1024 * 1024){
+        // attempt to still read, but localStorage may blow; skip large
+        continue;
+      }
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(f);
+      });
+      dataURLs.push(dataUrl);
+    }
+    return dataURLs;
+  }
+
+  function clearImages(){
+    state.images = [];
+    saveState();
+    renderImageCount();
+  }
+
+  // ---------- Data Export/Import ----------
+  function exportData(){
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `kill-cigarette-data-${dateKey()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function importDataFromFile(file){
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => {
+        try{
+          const obj = JSON.parse(String(r.result || "{}"));
+          resolve(obj);
+        }catch(e){ reject(e); }
+      };
+      r.onerror = reject;
+      r.readAsText(file, "utf-8");
+    });
+  }
+
+  function applyImportedState(obj){
+    // safest: merge into default
+    const d = defaultState();
+    state = {
+      ...d,
+      ...obj,
+      settings: {...d.settings, ...(obj.settings||{})},
+      days: obj.days || {},
+      logs: Array.isArray(obj.logs) ? obj.logs : [],
+      images: Array.isArray(obj.images) ? obj.images : [],
+      quotes: Array.isArray(obj.quotes) && obj.quotes.length ? obj.quotes : DEFAULT_QUOTES,
+      lastSmokeTs: obj.lastSmokeTs || null
+    };
+    saveState();
+    render();
+  }
+
+  // ---------- Events ----------
+  el.btnCrave.addEventListener("click", startCraveSession);
+  el.btnOpenSettings.addEventListener("click", () => openOverlay("settings"));
+  el.btnCloseCrave.addEventListener("click", () => {
+    if(confirm("确定要退出本次冲动处理吗？（不会记录忍住/抽了）")){
+      if(timerHandle){ clearInterval(timerHandle); timerHandle=null; }
+      if(quoteHandle){ clearInterval(quoteHandle); quoteHandle=null; }
+      closeOverlay("crave");
+      render();
+    }
+  });
+  el.btnCloseSettings.addEventListener("click", () => closeOverlay("settings"));
+
+  el.btnResist.addEventListener("click", () => endCraveSession("resist"));
+  el.btnSmoke.addEventListener("click", () => endCraveSession("smoke"));
+  el.btnSkip.addEventListener("click", () => endCraveSession("skip"));
+
+  el.btnSaveSettings.addEventListener("click", () => {
+    const savePerDay = clamp(Number(el.savePerDay.value || 0), 0, 999999);
+    const mins = clamp(Number(el.challengeMinutes.value || 7), 1, 120);
+    const tpl = String(el.statusTemplate.value || "").trim() || defaultState().settings.statusTemplate;
+
+    state.settings.savePerDay = savePerDay;
+    state.settings.challengeMinutes = mins;
+    state.settings.statusTemplate = tpl;
+
+    saveState();
+    render();
+    alert("已保存设置。");
+  });
+
+  el.imgInput.addEventListener("change", async (ev) => {
+    const files = ev.target.files;
+    if(!files || files.length === 0) return;
+    try{
+      const urls = await filesToDataURLs(files);
+      if(urls.length === 0){
+        alert("没有导入成功：可能图片过大（建议每张 < 2.5MB）或格式不支持。");
+        return;
+      }
+      state.images = [...(state.images || []), ...urls].slice(0, 50);
+      saveState();
+      renderImageCount();
+      alert(`已导入 ${urls.length} 张图片。`);
+      ev.target.value = "";
+    }catch(e){
+      console.error(e);
+      alert("导入失败。可能是浏览器限制或图片过大。");
+    }
+  });
+
+  el.btnClearImgs.addEventListener("click", () => {
+    if(confirm("确定清空所有已导入图片吗？")){
+      clearImages();
+    }
+  });
+
+  el.btnReset.addEventListener("click", () => {
+    if(confirm("再次确认：这会清空所有数据（包括图片）。确定？")){
+      localStorage.removeItem(KEY);
+      state = defaultState();
+      saveState();
+      render();
+      alert("已清空。");
+      closeOverlay("settings");
+    }
+  });
+
+  el.btnExport.addEventListener("click", exportData);
+
+  el.btnImport.addEventListener("click", () => {
+    el.fileImport.click();
+  });
+
+  el.fileImport.addEventListener("change", async (ev) => {
+    const f = ev.target.files && ev.target.files[0];
+    if(!f) return;
+    try{
+      const obj = await importDataFromFile(f);
+      applyImportedState(obj);
+      alert("导入成功。");
+      ev.target.value = "";
+    }catch(e){
+      console.error(e);
+      alert("导入失败：文件不是有效的 JSON 数据。");
+    }
+  });
+
+  // click outside to close overlays
+  el.overlayCrave.addEventListener("click", (e) => {
+    if(e.target === el.overlayCrave){
+      // do nothing to avoid accidental close
+    }
+  });
+  el.overlaySettings.addEventListener("click", (e) => {
+    if(e.target === el.overlaySettings){
+      closeOverlay("settings");
+    }
+  });
+
+  // Initial render
+  render();
+})();
+</script>
+</body>
+</html>
