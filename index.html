@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="在烟瘾来时停一会儿。记录触发场景、练习应对方法，给重新开始的自己一点支持。"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Kill Cigarette · 先停一会儿</title>
+    <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./assets/icon-192.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="preload" as="image" href="./assets/art/mist-lake.webp" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">跳到主要内容</a>
+    <div id="app">
+      <main class="loading">
+        <h1>Kill Cigarette</h1>
+        <p>给这一刻留一点空隙。</p>
+      </main>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <input
+      id="import-file"
+      type="file"
+      accept=".json,application/json"
+      hidden
+    />
+    <noscript><p>请启用 JavaScript，以使用本机记录和应对练习。</p></noscript>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
